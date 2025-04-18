@@ -14,7 +14,7 @@ LS_CONFIG = {
 	-- For C/C++
 	clangd = {},
 	-- For Python
-	ruff_lsp = {
+	ruff = {
 		on_attach = on_attach_ruff,
 	},
 	pyright = {
