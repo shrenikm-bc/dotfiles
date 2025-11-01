@@ -12,8 +12,8 @@ return {
 				enabled = true,
 				auto_refresh = true,
 				keymap = {
-					jump_prev = "<M-k>",
-					jump_next = "<M-j>",
+					-- jump_prev = "<M-k>",
+					-- jump_next = "<M-j>",
 					accept = "<Tab>",
 					refresh = "<leader>gcr",
 					open = "<M-CR>",
