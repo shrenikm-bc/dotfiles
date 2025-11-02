@@ -2,6 +2,8 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+local map = vim.keymap.set
+
 -- Save
 map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save" })
 -- Save all
