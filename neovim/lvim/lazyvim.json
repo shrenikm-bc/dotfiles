@@ -1,7 +1,8 @@
 {
   "extras": [
     "lazyvim.plugins.extras.coding.luasnip",
-    "lazyvim.plugins.extras.coding.nvim-cmp"
+    "lazyvim.plugins.extras.coding.nvim-cmp",
+    "lazyvim.plugins.extras.editor.telescope"
   ],
   "install_version": 8,
   "news": {
