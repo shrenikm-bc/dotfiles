@@ -10,6 +10,7 @@ REQUIRED_PACKAGES = {
   "taplo", -- TOML LSP
   "lemminx", -- XML LSP
   "harper-ls", -- Grammar LSP
+  -- "copilot-language-server",
 
   -- Linters/formatters
   "ruff",
@@ -44,6 +45,8 @@ return {
         harper_ls = {
           filetypes = { "vim", "lua", "cmake", "c", "cpp", "python", "sh", "yaml", "xml", "markdown", "text", "toml" },
         },
+        -- copilot.lua only works with its own copilot lsp server
+        copilot = { enabled = false },
       },
       -- setup = {
       --   [ruff] = function()
