@@ -10,3 +10,6 @@ map({ "i", "x", "n", "s" }, "<A-s>", "<cmd>wa<cr><esc>", { desc = "Save All File
 map("n", "<leader>qf", "<cmd>q<cr>", { desc = "Quit Window" })
 -- Quit window without saving
 map("n", "<leader>qx", "<cmd>q!<cr>", { desc = "Quit Window" })
+
+-- Run current python file
+map("n", "<leader>rp", "<cmd>vsplit term://python %<cr>", { desc = "Run Python Script" })
