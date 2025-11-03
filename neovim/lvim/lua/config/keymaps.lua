@@ -5,7 +5,7 @@
 local map = vim.keymap.set
 
 -- Save all
-map({ "i", "x", "n", "s" }, "<S-s>", "<cmd>wa<cr><esc>", { desc = "Save All Files" })
+map({ "i", "x", "n", "s" }, "<A-s>", "<cmd>wa<cr><esc>", { desc = "Save All Files" })
 -- Quit window
 map("n", "<leader>qf", "<cmd>q<cr>", { desc = "Quit Window" })
 -- Quit window without saving
