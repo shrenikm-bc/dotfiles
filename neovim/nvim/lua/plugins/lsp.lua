@@ -133,16 +133,13 @@ return {
 			})
 
 			-- Setup for each language server.
-			local lspconfig = require("lspconfig")
 
 			-- Cross dependency with completions. Not really avoidable.
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			for ls, config in pairs(LS_CONFIG) do
 				config.capabilities = capabilities
-				lspconfig[ls].setup({
-					config,
-				})
+        vim.lsp.config(ls, config)
 			end
 		end,
 	},
