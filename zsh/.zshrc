@@ -29,6 +29,13 @@ setopt multios
 setopt globdots
 # -----------------------------------------------------------
 
+# Keybindings
+# -----------------------------------------------------------
+# For zsh-autosuggestions
+bindkey '^ ' autosuggest-accept
+bindkey '^g' autosuggest-toggle
+# -----------------------------------------------------------
+
 # Autocomplete
 # -----------------------------------------------------------
 autoload -Uz compinit
