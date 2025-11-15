@@ -44,6 +44,7 @@ alias gs='git status'
 alias gd='git diff'
 alias ga='git add -u'
 alias gaa='git add .'
+alias gcm='git commit -m'
 # -----------------------------------------------------------
 
 # Neovim config
