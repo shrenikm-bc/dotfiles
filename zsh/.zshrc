@@ -45,6 +45,7 @@ alias gd='git diff'
 alias ga='git add -u'
 alias gaa='git add .'
 alias gcm='git commit -m'
+alias gpo='git push origin'
 # -----------------------------------------------------------
 
 # Neovim config
