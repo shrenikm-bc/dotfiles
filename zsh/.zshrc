@@ -6,7 +6,6 @@ export ZSH="/home/shrenikm/.oh-my-zsh"
 ZSH_THEME="af-magic"
 
 plugins=(
-  git
   zsh-autosuggestions
   colored-man-pages
   command-not-found
@@ -38,7 +37,7 @@ autoload -Uz compinit
 # Aliases
 # -----------------------------------------------------------
 # Unalias git-gui so that we can use grip-grab
-unalias gg
+unalias gg 2>/dev/null
 
 alias gs='git status'
 alias gd='git diff'
@@ -98,3 +97,15 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # -----------------------------------------------------------
 
+
+# Yazi config
+# -----------------------------------------------------------
+# Resume from the last working directory when calling yazi through 'y'
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+# -----------------------------------------------------------
