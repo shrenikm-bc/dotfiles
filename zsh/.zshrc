@@ -39,6 +39,7 @@ autoload -Uz compinit
 # Unalias git-gui so that we can use grip-grab
 unalias gg 2>/dev/null
 
+alias gl='git log --oneline --graph --decorate --all'
 alias gs='git status'
 alias gd='git diff'
 alias ga='git add -u'
