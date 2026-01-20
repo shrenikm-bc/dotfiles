@@ -12,4 +12,16 @@ map("n", "<leader>qf", "<cmd>q<cr>", { desc = "Quit Window" })
 map("n", "<leader>qx", "<cmd>q!<cr>", { desc = "Quit Window" })
 
 -- Run current python file
-map("n", "<leader>rp", "<cmd>vsplit term://python %<cr>", { desc = "Run Python Script" })
+--map("n", "<leader>rp", "<cmd>vsplit term://python %<cr>", { desc = "Run Python Script (Regular term)" })
+map("n", "<leader>rp", function()
+  Snacks.terminal("python " .. vim.fn.expand("%") .. "; zsh", {
+    win = {
+      style = "float",
+      border = "rounded",
+      width = 0.8,
+      height = 0.8,
+    },
+    id = "python_runner",
+    kill = true,
+  })
+end, { desc = "Run Python Script (Snacks terminal)" })
