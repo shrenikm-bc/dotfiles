@@ -27,6 +27,7 @@ setopt pushd_ignore_dups
 setopt correct
 setopt multios
 setopt globdots
+setopt nullglob
 # -----------------------------------------------------------
 
 # Keybindings
