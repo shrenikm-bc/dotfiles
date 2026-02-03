@@ -58,7 +58,7 @@ alias gpo='git push origin'
 
 # Neovim config
 # -----------------------------------------------------------
-NVIM_BIN=/opt/nvim_0.11.4-linux64/bin/nvim
+NVIM_BIN=/opt/nvim_0.11.6-linux64/bin/nvim
 
 # Aliases for different neovim setups.
 

@@ -9,5 +9,5 @@ vim.g.maplocalleader = "\\"
 -- Set to `false` to globally disable all snacks animations
 vim.g.snacks_animate = true
 
-vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_lsp = "basedpyright"
 vim.g.lazyvim_python_ruff = "ruff"
