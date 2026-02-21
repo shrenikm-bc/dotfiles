@@ -27,6 +27,20 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        basedpyright = {
+          settings = {
+            -- python = {
+            --   pythonPath = "/home/youruser/bin/nspawn-python",
+            -- },
+            basedpyright = {
+              analysis = {
+                -- Ensures it uses the libraries from the container
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "openFilesOnly",
+              },
+            },
+          },
+        },
         ruff = {
           cmd_env = { RUFF_TRACE = "messages" },
           init_options = {
