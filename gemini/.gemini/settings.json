@@ -1,0 +1,34 @@
+{
+  "general": {
+    "preferredEditor": "neovim",
+    "disableUpdateNag": true,
+    "previewFeatures": true
+    "sessionRetention": {
+      "enabled": true,
+      "maxAge": "30d",
+      "warningAcknowledged": true
+    }
+  },
+  "context": {
+    "fileName": [
+      "AGENTS.md",
+      "CONTEXT.md",
+      "GEMINI.md"
+    ],
+    "loadFromIncludeDirectories": true,
+    "fileFiltering": {
+      "respectGitIgnore": false
+    }
+  },
+  "security": {
+    "auth": {
+      "selectedType": "vertex-ai"
+    }
+  },
+  "ui": {
+    "theme": "Default"
+  },
+  "tools": {
+    "enableToolOutputTruncation": false
+  }
+}

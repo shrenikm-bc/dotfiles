@@ -3,7 +3,7 @@
 Create the symbolic link:
 
 ```bash
-ln -s "$PWD/gemini/.gemini/".* "$PWD/gemini/.gemini/"* ~/.gemini/ 2>/dev/null
+ln -sf "$PWD/gemini/.gemini/".* "$PWD/gemini/.gemini/"* ~/.gemini/ 2>/dev/null
 ```
 
 Note that the .* is for hidden files and the null piping for if files/hidden files are not found.
