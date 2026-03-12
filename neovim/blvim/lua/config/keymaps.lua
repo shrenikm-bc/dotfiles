@@ -28,18 +28,30 @@ map("n", "<leader>qx", "<cmd>q!<cr>", { desc = "Quit Window" })
 
 -- Run the python file in sandbox.
 vim.keymap.set("n", "<leader>rp", function()
-  -- 1. Get the relative path of the current file (e.g., "src/main.py")
-  local relative_path = vim.fn.expand("%")
+  -- Get the absolute path of the current file
+  local absolute_file_path = vim.fn.expand("%:p")
 
-  -- 2. Define where this project lives INSIDE the container
-  -- Make sure this matches the actual path in the sandbox!
+  -- Find where "/src/" is in that absolute path and strip it away
+  local start_idx, end_idx = string.find(absolute_file_path, "/src/")
+
+  local clean_container_path = ""
+  if end_idx then
+    -- Grab everything AFTER "/src/"
+    clean_container_path = string.sub(absolute_file_path, end_idx + 1)
+  else
+    -- Fallback just in case you run this on a file outside of src
+    clean_container_path = vim.fn.expand("%:t")
+  end
+
   local container_project_path = "/opt/shining_software"
 
-  -- 3. Build the inner command: CD into the project, then run the file
-  local inner_cmd = string.format("cd %s && python3 %s", container_project_path, relative_path)
+  -- Build the inner command using the cleanly stripped relative path
+  -- Added PYTHONPATH=/opt so python can find the shining_software module
+  local inner_cmd =
+    string.format("export DISPLAY=:1 && cd %s && python3 %s", container_project_path, clean_container_path)
 
-  -- 4. Wrap it in our flawless sudo machinectl command
-  local full_cmd = string.format('sudo machinectl shell brain@sandbox /bin/bash -lc "%s"', inner_cmd)
+  -- Wrap it in our flawless sudo machinectl command
+  local full_cmd = string.format('sudo machinectl shell -E DISPLAY=:1 brain@sandbox /bin/bash -lc "%s"', inner_cmd)
 
   -- 5. Execute via Snacks
   Snacks.terminal(full_cmd .. "; zsh", {
