@@ -2,12 +2,13 @@
   "general": {
     "preferredEditor": "neovim",
     "disableUpdateNag": true,
-    "previewFeatures": true
+    "previewFeatures": true,
     "sessionRetention": {
       "enabled": true,
       "maxAge": "30d",
       "warningAcknowledged": true
-    }
+    },
+    "enableAutoUpdateNotification": false
   },
   "context": {
     "fileName": [
