@@ -25,9 +25,9 @@ local ignore_words = {
   "ros",
   "catkin",
   -- Removes duplicate scanning of the project workspace
-  "opt/shining_software",
+  -- "opt/shining_software",
   -- Prevents scanning raw stdlib (LSP uses internal stubs instead)
-  "/usr/lib/python3.12",
+  -- "/usr/lib/python3.12",
 }
 
 -- Function to get and dynamically filter paths
@@ -60,6 +60,9 @@ local function get_container_paths()
       end
     end
   end
+
+  local debug_string = table.concat(paths, "\n")
+  vim.notify("Basedpyright Paths:\n" .. debug_string, vim.log.levels.WARN)
 
   return paths
 end
