@@ -33,6 +33,6 @@
     "enableToolOutputTruncation": false
   },
   "model": {
-    "name": "gemini-2.5-flash"
+    "name": "gemini-3.1-pro-preview"
   }
 }

@@ -1,10 +1,11 @@
 ## Setup Instructions
 
-Create the symbolic link:
+Create the symbolic link to the ~/.gemini directory by running
+
 
 ```bash
-ln -sf "$PWD/gemini/.gemini/".* "$PWD/gemini/.gemini/"* ~/.gemini/ 2>/dev/null
 ```
+./install.sh
 
 Note that the .* is for hidden files and the null piping for if files/hidden files are not found.
 Also this needs to be run each time you add new files to the .gemini directory.
