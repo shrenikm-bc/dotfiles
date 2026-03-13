@@ -19,59 +19,27 @@ REQUIRED_PACKAGES = {
 -- Give Node.js 8GB of memory to handle heavy third-party packages
 vim.env.NODE_OPTIONS = "--max-old-space-size=8192"
 
-local rootfs_path = vim.fn.expand("~/shining_software/build/rootfs.shining.generic")
--- Define words we want to filter out of sys.path
-local ignore_words = {
-  "ros",
-  "catkin",
-  -- Removes duplicate scanning of the project workspace
-  -- "opt/shining_software",
-  -- Prevents scanning raw stdlib (LSP uses internal stubs instead)
-  -- "/usr/lib/python3.12",
+-- These are from running sys.path in the sandbox.
+container_paths = {
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/opt/catkin/lib/python3/dist-packages"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/opt/ros/noetic/lib/python3/dist-packages"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/opt/shining_software"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/local/lib/python3.12"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/lib/python312.zip"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/lib/python3.12"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/lib/python3.12/lib-dynload"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/local/lib/python3.12/shining-packages"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/local/lib/python3.12/dist-packages"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/lib/python3/dist-packages"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/local/lib/python3.12/shining-packages/rerun_sdk"),
+  vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/lib/python3.12"),
 }
-
--- Function to get and dynamically filter paths
-local function get_container_paths()
-  local cmd =
-    'sudo machinectl shell brain@sandbox /bin/bash -lc "python3 -c \\"import sys; print(\'\\n\'.join(sys.path))\\""'
-
-  local output = vim.fn.system(cmd)
-  local paths = {}
-
-  -- Parse the output line by line
-  for line in output:gmatch("[^\r\n]+") do
-    -- Filter out junk: empty lines, the current dir ("."), and zip files
-    if line ~= "" and line ~= "." and not line:match("%.zip$") then
-      -- Ensure it's an absolute container path (starts with /)
-      if line:sub(1, 1) == "/" then
-        -- Check if the path contains any of our ignored words
-        local keep_path = true
-        for _, word in ipairs(ignore_words) do
-          if string.find(line, word) then
-            keep_path = false
-            break
-          end
-        end
-
-        -- If it passed the filter, glue it together and add it!
-        if keep_path then
-          table.insert(paths, rootfs_path .. line)
-        end
-      end
-    end
-  end
-
-  local debug_string = table.concat(paths, "\n")
-  vim.notify("Basedpyright Paths:\n" .. debug_string, vim.log.levels.WARN)
-
-  return paths
-end
 
 return {
   {
     "mason.nvim",
     opts = {
-      ensure_installed = REQUIRED_LS,
+      ensure_installed = REQUIRED_PACKAGES,
     },
   },
   {
@@ -79,6 +47,10 @@ return {
     opts = {
       servers = {
         basedpyright = {
+          before_init = function(params, config)
+            config.settings.python.pythonPath =
+              vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/bin/python3")
+          end,
           settings = {
             basedpyright = {
               analysis = {
@@ -86,9 +58,30 @@ return {
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
                 diagnosticMode = "openFilesOnly",
-                extraPaths = get_container_paths(),
+                extraPaths = container_paths,
+                exclude = {
+                  "**/node_modules",
+                  "**/__pycache__",
+                  "**/.pytest_tmp",
+                  "**/.pytest_cache",
+                  "**/.mypy_cache",
+                  "**/build",
+                  "**/dist",
+                  "**/bazel-*",
+                  "**/.git",
+                },
+                ignore = {
+                  "**/node_modules",
+                  "**/__pycache__",
+                  "**/.pytest_tmp",
+                  "**/.pytest_cache",
+                  "**/.mypy_cache",
+                  "**/build",
+                  "**/dist",
+                },
               },
             },
+            python = {},
           },
         },
         ruff = {
