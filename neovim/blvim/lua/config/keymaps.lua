@@ -45,13 +45,11 @@ vim.keymap.set("n", "<leader>rp", function()
 
   local container_project_path = "/opt/shining_software"
 
-  -- Build the inner command using the cleanly stripped relative path
-  -- Added PYTHONPATH=/opt so python can find the shining_software module
-  local inner_cmd =
-    string.format("export DISPLAY=:1 && cd %s && python3 %s", container_project_path, clean_container_path)
-
-  -- Wrap it in our flawless sudo machinectl command
-  local full_cmd = string.format('sudo machinectl shell -E DISPLAY=:1 brain@sandbox /bin/bash -lc "%s"', inner_cmd)
+  local full_cmd = string.format(
+    'ssh -Y -t sandbox "/bin/bash -lc \\"cd %s && python3 %s\\""',
+    container_project_path,
+    clean_container_path
+  )
 
   -- 5. Execute via Snacks
   Snacks.terminal(full_cmd .. "; zsh", {
