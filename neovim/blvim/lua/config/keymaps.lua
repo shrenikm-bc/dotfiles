@@ -82,8 +82,3 @@ map("n", "<leader>rd", function()
   Snacks.terminal(cmd, term_opts)
 end, { desc = "Debug Python Script inside nspawn sandbox" })
 
--- TOGGLE
-map({ "n", "t" }, "<leader>rt", function()
-  Snacks.terminal.toggle(nil, term_opts)
-end, { desc = "Toggle Python Terminal" })
-
