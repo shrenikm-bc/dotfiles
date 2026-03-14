@@ -21,7 +21,7 @@ map("n", "<leader>qx", "<cmd>q!<cr>", { desc = "Quit Window" })
 --       width = 0.8,
 --       height = 0.8,
 --     },
---     id = "python_runner",
+--     id = "python_runner_debugger",
 --     kill = true,
 --   })
 -- end, { desc = "Run Python Script (Snacks terminal)" })
@@ -59,7 +59,7 @@ vim.keymap.set("n", "<leader>rp", function()
       width = 0.8,
       height = 0.8,
     },
-    id = "python_runner",
+    id = "python_runner_debugger",
     kill = true,
   })
 end, { desc = "Run Python Script inside nspawn sandbox" })
@@ -79,7 +79,7 @@ vim.keymap.set("n", "<leader>rd", function()
   local container_project_path = "/opt/shining_software"
 
   local full_cmd = string.format(
-    "ssh -Y -t sandbox '/bin/bash -lc \"export PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:$PYTHONPATH && cd %s && python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s\"'",
+    "ssh -Y -t sandbox '/bin/bash -lc \"cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s\"'",
     container_project_path,
     clean_container_path
   )
@@ -91,7 +91,12 @@ vim.keymap.set("n", "<leader>rd", function()
       width = 0.8,
       height = 0.8,
     },
-    id = "python_debugger",
+    id = "python_runner_debugger",
     kill = true,
   })
 end, { desc = "Debug Python Script inside nspawn sandbox" })
+
+-- Toggle the debug terminal visibility without killing it
+vim.keymap.set("n", "<leader>rt", function()
+  Snacks.terminal.toggle(nil, { id = "python_runner_debugger" })
+end, { desc = "Toggle Python Debug Terminal" })
