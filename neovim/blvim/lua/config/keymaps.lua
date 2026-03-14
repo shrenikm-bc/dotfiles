@@ -19,66 +19,45 @@ local function get_sandbox_cmd(is_debug)
   local absolute_file_path = vim.fn.expand("%:p")
   local start_idx, end_idx = string.find(absolute_file_path, "/src/")
 
-  local clean_container_path = ""
-  if end_idx then
-    clean_container_path = string.sub(absolute_file_path, end_idx + 1)
-  else
-    clean_container_path = vim.fn.expand("%:t")
-  end
-
+  local clean_container_path = end_idx and string.sub(absolute_file_path, end_idx + 1) or vim.fn.expand("%:t")
   local container_project_path = "/opt/shining_software"
 
-  local full_cmd = ""
+  local inner_cmd = ""
   if is_debug then
-    full_cmd = string.format(
-      "ssh -Y -t sandbox '/bin/bash -lc \"cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s\"'",
-      container_project_path,
-      clean_container_path
-    )
+    inner_cmd = string.format("cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s", container_project_path, clean_container_path)
   else
-    full_cmd = string.format(
-      "ssh -Y -t sandbox '/bin/bash -lc \"cd %s && python3 %s\"'",
-      container_project_path,
-      clean_container_path
-    )
+    inner_cmd = string.format("cd %s && python3 %s", container_project_path, clean_container_path)
   end
-  return full_cmd
+
+  return string.format("ssh -Y -t sandbox '/bin/bash -lc \"%s\"'", inner_cmd)
 end
 
-local term_opts = {
+-- Shared floating style for EVERYTHING
+local float_opts = {
   win = { style = "float", border = "rounded", width = 0.8, height = 0.8 },
-  id = "python_runner_debugger",
 }
 
--- RUN
+-- 1. Override the default LazyVim Ctrl+/ terminal to be a floating window
+map({ "n", "t" }, "<c-/>", function()
+  Snacks.terminal(nil, float_opts)
+end, { desc = "Toggle Terminal (Float)" })
+
+map({ "n", "t" }, "<c-_>", function()
+  Snacks.terminal(nil, float_opts)
+end, { desc = "which_key_ignore" })
+
+
+-- 2. <leader>rp opens a floating run terminal. If it exists, it toggles it back instead of running again!
 map("n", "<leader>rp", function()
-  -- Force kill any existing background runner so we start fresh
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if vim.bo[buf].filetype == "snacks_terminal" then
-      if vim.b[buf].snacks_terminal_id == "python_runner_debugger" then
-         vim.api.nvim_buf_delete(buf, { force = true })
-      end
-    end
-  end
-  
+  -- If we just call toggle with our specific ID, it will create it if it doesn't exist,
+  -- and bring it back if it is hidden!
   local cmd = get_sandbox_cmd(false) .. "; echo \"\\n[Process Exited]\"; read"
-  Snacks.terminal(cmd, term_opts)
+  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner" }))
 end, { desc = "Run Python Script inside nspawn sandbox" })
 
 -- DEBUG
 map("n", "<leader>rd", function()
-  -- Force kill any existing background runner so we start fresh
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    if vim.bo[buf].filetype == "snacks_terminal" then
-      if vim.b[buf].snacks_terminal_id == "python_runner_debugger" then
-         vim.api.nvim_buf_delete(buf, { force = true })
-      end
-    end
-  end
-  
   local cmd = get_sandbox_cmd(true)
-  Snacks.terminal(cmd, term_opts)
+  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger" }))
 end, { desc = "Debug Python Script inside nspawn sandbox" })
 
