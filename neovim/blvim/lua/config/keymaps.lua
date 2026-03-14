@@ -24,7 +24,11 @@ local function get_sandbox_cmd(is_debug)
 
   local inner_cmd = ""
   if is_debug then
-    inner_cmd = string.format("cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s", container_project_path, clean_container_path)
+    inner_cmd = string.format(
+      "cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s",
+      container_project_path,
+      clean_container_path
+    )
   else
     inner_cmd = string.format("cd %s && python3 %s", container_project_path, clean_container_path)
   end
@@ -46,18 +50,17 @@ map({ "n", "t" }, "<c-_>", function()
   Snacks.terminal(nil, float_opts)
 end, { desc = "which_key_ignore" })
 
-
--- 2. <leader>rp opens a floating run terminal. If it exists, it toggles it back instead of running again!
+-- 2. <leader>rp opens a floating run terminal.
 map("n", "<leader>rp", function()
-  -- If we just call toggle with our specific ID, it will create it if it doesn't exist,
-  -- and bring it back if it is hidden!
-  local cmd = get_sandbox_cmd(false) .. "; echo \"\\n[Process Exited]\"; read"
-  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner" }))
+  local cmd = get_sandbox_cmd(false) .. '; echo "\\n[Process Exited]"; read'
+  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner", interactive = true }))
 end, { desc = "Run Python Script inside nspawn sandbox" })
 
 -- DEBUG
 map("n", "<leader>rd", function()
   local cmd = get_sandbox_cmd(true)
-  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger" }))
+  Snacks.terminal.toggle(
+    cmd,
+    vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger", interactive = true })
+  )
 end, { desc = "Debug Python Script inside nspawn sandbox" })
-
