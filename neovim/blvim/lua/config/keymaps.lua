@@ -64,7 +64,6 @@ vim.keymap.set("n", "<leader>rp", function()
   })
 end, { desc = "Run Python Script inside nspawn sandbox" })
 
-
 -- Run the python file in sandbox WITH DEBUGGER
 vim.keymap.set("n", "<leader>rd", function()
   local absolute_file_path = vim.fn.expand("%:p")
@@ -80,7 +79,7 @@ vim.keymap.set("n", "<leader>rd", function()
   local container_project_path = "/opt/shining_software"
 
   local full_cmd = string.format(
-    'ssh -Y -t sandbox "/bin/bash -lc \"cd %s && python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s\""',
+    "ssh -Y -t sandbox '/bin/bash -lc \"export PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:$PYTHONPATH && cd %s && python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s\"'",
     container_project_path,
     clean_container_path
   )
