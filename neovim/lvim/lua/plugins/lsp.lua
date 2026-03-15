@@ -1,28 +1,4 @@
-REQUIRED_PACKAGES = {
-  -- Language servers
-  "bash-language-server",
-  "vim-language-server",
-  "lua-language-server",
-  "cmake-language-server",
-  "yaml-language-server",
-  "clangd",
-  "basedpyright",
-  "taplo", -- TOML LSP
-  "lemminx", -- XML LSP
-  "harper-ls", -- Grammar LSP
-  -- "copilot-language-server",
-
-  -- Linters/formatters
-  "ruff",
-}
-
 return {
-  {
-    "mason.nvim",
-    opts = {
-      ensure_installed = REQUIRED_LS,
-    },
-  },
   {
     "neovim/nvim-lspconfig",
     opts = {
