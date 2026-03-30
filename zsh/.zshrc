@@ -1,7 +1,7 @@
 # Oh my zsh config
 # -----------------------------------------------------------
 # Path to your oh-my-zsh installation.
-export ZSH="/home/shrenikm/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="af-magic"
 
@@ -39,7 +39,9 @@ bindkey '^g' autosuggest-toggle
 
 # Autocomplete
 # -----------------------------------------------------------
+fpath+=~/.zfunc
 autoload -Uz compinit
+compinit
 # -----------------------------------------------------------
 
 # Aliases
@@ -58,15 +60,21 @@ alias gpo='git push origin'
 
 # Neovim config
 # -----------------------------------------------------------
-NVIM_BIN=/opt/nvim_0.11.6-linux64/bin/nvim
+NVIM_BIN=/opt/nvim_0.11.6-linux-x86_64/bin/nvim
 
 # Aliases for different neovim setups.
+
+# Alias for tictl kitty
+alias tictl='TERM=xterm-256color tictl'
 
 # Custom Neovim setup
 alias nvim='NVIM_APPNAME=nvim $NVIM_BIN'
 
 # LazyVim setup
 alias lvim='NVIM_APPNAME=lvim $NVIM_BIN'
+
+# Brain LazyVim setup
+alias blvim='NVIM_APPNAME=blvim $NVIM_BIN'
 
 # Set editor
 export EDITOR="lvim"
@@ -76,6 +84,10 @@ export EDITOR="lvim"
 # -----------------------------------------------------------
 path+=$HOME/.local/bin
 path+=$HOME/.cargo/bin
+path+=$HOME/software_binaries
+# Cuda
+export PATH=/usr/local/cuda-12.1/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 # -----------------------------------------------------------
 
 

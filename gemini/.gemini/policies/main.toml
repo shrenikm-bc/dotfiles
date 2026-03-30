@@ -1,0 +1,74 @@
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "cat"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "ls"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "grep"
+decision = "allow"
+priority = 100
+
+# git commands
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git status"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git diff"
+decision = "allow"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git log"
+decision = "allow"
+priority = 100
+
+# GCP tools
+[[rule]]
+mcpName = "observability"
+decision = "allow"
+priority = 500
+
+[[rule]]
+mcpName = "securityServer"
+decision = "allow"
+priority = 500
+
+# Jira
+[[rule]]
+mcpName = "atlassian-rovo-mcp-server"
+toolName = [
+  "atlassianUserInfo",
+  "fetch",
+  "getAccessibleAtlassianResources",
+  "getConfluencePage",
+  "getConfluencePageDescendants",
+  "getConfluencePageFooterComments",
+  "getConfluencePageInlineComments",
+  "getConfluenceSpaces",
+  "getJiraIssue",
+  "getJiraIssueRemoteIssueLinks",
+  "getJiraIssueTypeMetaWithFields",
+  "getJiraProjectIssueTypesMetadata",
+  "getPagesInConfluenceSpace",
+  "getTransitionsForJiraIssue",
+  "getVisibleJiraProjects",
+  "lookupJiraAccountId",
+  "search",
+  "searchConfluenceUsingCql",
+  "searchJiraIssuesUsingJql",
+]
+decision = "allow"
+priority = 500
