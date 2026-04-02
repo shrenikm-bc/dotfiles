@@ -37,11 +37,13 @@ priority = 100
 
 # GCP tools
 [[rule]]
+toolName = "*"
 mcpName = "observability"
 decision = "allow"
 priority = 500
 
 [[rule]]
+toolName = "*"
 mcpName = "securityServer"
 decision = "allow"
 priority = 500
