@@ -1,7 +1,6 @@
 {
   "general": {
     "preferredEditor": "neovim",
-    "disableUpdateNag": true,
     "previewFeatures": true,
     "sessionRetention": {
       "enabled": true,
