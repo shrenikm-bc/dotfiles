@@ -24,16 +24,36 @@ local function get_sandbox_cmd(is_debug)
 
   local inner_cmd = ""
   if is_debug then
+    -- Dynamically find the path to debugpy on the host machine
+    local handle = io.popen('python3 -c "import debugpy; print(debugpy.__path__[0])" 2>/dev/null')
+    if not handle then
+      return nil, "Failed to execute python3 command to find debugpy"
+    end
+    local debugpy_host_path = handle:read("*a"):gsub("%s+", "")
+    handle:close()
+
+    if debugpy_host_path == "" then
+      return nil, "debugpy is not installed in the host's active Python environment! (pip install debugpy)"
+    end
+
+    -- Scping `debugpy_host_path` to `/tmp/debugpy_inject/debugpy`.
+
+    local scp_cmd = string.format(
+      'echo "Injecting debugpy..." && ssh sandbox "mkdir -p /tmp/debugpy_inject" && scp -q -r %s sandbox:/tmp/debugpy_inject/debugpy',
+      debugpy_host_path
+    )
+
     inner_cmd = string.format(
-      "cd %s && PYTHONPATH=/usr/local/local/lib/python3.12/dist-packages:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s",
+      "cd %s && PYTHONPATH=/tmp/debugpy_inject:\\$PYTHONPATH python3 -m debugpy --listen 0.0.0.0:5678 --wait-for-client %s",
       container_project_path,
       clean_container_path
     )
+
+    return string.format("%s && ssh -Y -t sandbox '/bin/bash -lc \"%s\"'", scp_cmd, inner_cmd), nil
   else
     inner_cmd = string.format("cd %s && python3 %s", container_project_path, clean_container_path)
+    return string.format("ssh -Y -t sandbox '/bin/bash -lc \"%s\"'", inner_cmd), nil
   end
-
-  return string.format("ssh -Y -t sandbox '/bin/bash -lc \"%s\"'", inner_cmd)
 end
 
 -- Shared floating style for EVERYTHING
@@ -52,15 +72,27 @@ end, { desc = "which_key_ignore" })
 
 -- 2. <leader>rp opens a floating run terminal.
 map("n", "<leader>rp", function()
-  local cmd = get_sandbox_cmd(false) .. '; echo "\\n[Process Exited]"; read'
-  Snacks.terminal.toggle(cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner", interactive = true }))
+  local cmd, err = get_sandbox_cmd(false)
+  if err then
+    vim.notify(err, vim.log.levels.ERROR)
+    return
+  end
+  cmd = cmd .. '; echo "\\n[Process Exited]"; read'
+  Snacks.terminal.toggle(
+    cmd,
+    vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner", interactive = false })
+  )
 end, { desc = "Run Python Script inside nspawn sandbox" })
 
 -- DEBUG
 map("n", "<leader>rd", function()
-  local cmd = get_sandbox_cmd(true)
+  local cmd, err = get_sandbox_cmd(true)
+  if err then
+    vim.notify(err, vim.log.levels.ERROR)
+    return
+  end
   Snacks.terminal.toggle(
     cmd,
-    vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger", interactive = true })
+    vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger", interactive = false })
   )
 end, { desc = "Debug Python Script inside nspawn sandbox" })
