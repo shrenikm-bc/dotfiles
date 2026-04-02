@@ -1,21 +1,3 @@
-REQUIRED_PACKAGES = {
-  -- Language servers
-  "bash-language-server",
-  "vim-language-server",
-  "lua-language-server",
-  "cmake-language-server",
-  "yaml-language-server",
-  "clangd",
-  "basedpyright",
-  "taplo", -- TOML LSP
-  "lemminx", -- XML LSP
-  "harper-ls", -- Grammar LSP
-  -- "copilot-language-server",
-
-  -- Linters/formatters
-  "ruff",
-}
-
 -- Give Node.js 8GB of memory to handle heavy third-party packages
 vim.env.NODE_OPTIONS = "--max-old-space-size=8192"
 
@@ -36,12 +18,6 @@ container_paths = {
 }
 
 return {
-  {
-    "mason.nvim",
-    opts = {
-      ensure_installed = REQUIRED_PACKAGES,
-    },
-  },
   {
     "neovim/nvim-lspconfig",
     opts = {
