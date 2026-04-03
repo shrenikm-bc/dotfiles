@@ -22,13 +22,13 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        basedpyright = {
+        pyright = {
           before_init = function(params, config)
             config.settings.python.pythonPath =
               vim.fn.expand("~/shining_software/build/rootfs.shining.generic/usr/bin/python3")
           end,
           settings = {
-            basedpyright = {
+            python = {
               analysis = {
                 -- Ensure that it uses the libraries from the container
                 autoSearchPaths = true,
@@ -57,7 +57,6 @@ return {
                 },
               },
             },
-            python = {},
           },
         },
         ruff = {
