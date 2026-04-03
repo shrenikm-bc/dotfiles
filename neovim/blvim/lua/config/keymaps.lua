@@ -61,13 +61,14 @@ local float_opts = {
   win = { style = "float", border = "rounded", width = 0.8, height = 0.8 },
 }
 
--- 1. Override the default LazyVim Ctrl+/ terminal to be a floating window
+-- 1. Override the default LazyVim Ctrl+/ terminal to open a shell inside the sandbox container
+local container_shell_cmd = "ssh sandbox"
 map({ "n", "t" }, "<c-/>", function()
-  Snacks.terminal(nil, float_opts)
-end, { desc = "Toggle Terminal (Float)" })
+  Snacks.terminal.toggle(container_shell_cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_shell" }))
+end, { desc = "Toggle Terminal (Sandbox)" })
 
 map({ "n", "t" }, "<c-_>", function()
-  Snacks.terminal(nil, float_opts)
+  Snacks.terminal.toggle(container_shell_cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_shell" }))
 end, { desc = "which_key_ignore" })
 
 -- 2. <leader>rp opens a floating run terminal.
