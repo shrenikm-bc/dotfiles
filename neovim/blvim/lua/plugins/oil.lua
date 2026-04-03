@@ -11,6 +11,20 @@ return {
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
         ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
         ["q"] = { "actions.close", mode = "n" },
+        -- Search inside the directory Oil is currently showing
+        ["sg"] = function()
+          local dir = require("oil").get_current_dir()
+          if dir then
+            require("telescope.builtin").live_grep({ cwd = dir })
+          end
+        end,
+        -- Search and Replace inside the directory Oil is currently showing using grug-far
+        ["sr"] = function()
+          local dir = require("oil").get_current_dir()
+          if dir then
+            require("grug-far").open({ prefills = { paths = dir } })
+          end
+        end,
       },
       view_options = {
         show_hidden = true,
