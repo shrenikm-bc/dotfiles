@@ -11,6 +11,3 @@ vim.g.snacks_animate = true
 
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_python_ruff = "ruff"
-
--- Disable horizontal scroll buffer so it only shifts at the absolute edge of the screen
-vim.opt.sidescrolloff = 0
