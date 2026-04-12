@@ -1,2 +1,3 @@
 [flavor]
-use = "catppuccin-mocha"
+dark = "gruvbox-material"
+light = "gruvbox-material"

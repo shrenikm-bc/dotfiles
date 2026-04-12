@@ -34,10 +34,11 @@ else
     YA_CMD="$(find /snap/yazi -name "ya" -type f -executable 2>/dev/null | head -1)"
 fi
 
-# Install catppuccin-mocha flavor
+# Install flavors
 if [ -n "$YA_CMD" ]; then
-    echo 'Installing catppuccin-mocha flavor ...'
-    "$YA_CMD" pkg add yazi-rs/flavors:catppuccin-mocha
+    mkdir -p "$TARGET_DIR/plugins"
+    echo 'Installing yazi flavors ...'
+    "$YA_CMD" pkg add matt-dong-123/gruvbox-material
     "$YA_CMD" pkg install
 else
     echo -e "${RED}ya command not found. Install yazi, then re-run.${NO_COLOR}"
