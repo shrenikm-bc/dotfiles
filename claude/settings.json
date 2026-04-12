@@ -1,0 +1,52 @@
+{
+  "model": "opus",
+  "editorMode": "vim",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(tree *)",
+      "Bash(file *)",
+      "Bash(stat *)",
+      "Bash(which *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git show *)",
+      "Bash(git blame *)",
+      "Bash(pwd)",
+      "Bash(realpath *)",
+      "Bash(readlink *)",
+      "Bash(diff *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(uname *)",
+      "Bash(hostname *)",
+      "Bash(whoami)",
+      "Bash(date *)",
+      "Bash(jq *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(cut *)",
+      "Bash(tr *)",
+      "Bash(md5sum *)",
+      "Bash(sha256sum *)",
+      "Bash(printenv *)",
+      "Bash(ps *)",
+      "Bash(pgrep *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ]
+  }
+}
