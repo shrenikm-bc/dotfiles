@@ -27,6 +27,22 @@ else
     sudo apt install -y 7zip
 fi
 
+# Resolve the ya command (may not be on PATH for snap installs)
+if command -v ya &> /dev/null; then
+    YA_CMD="ya"
+else
+    YA_CMD="$(find /snap/yazi -name "ya" -type f -executable 2>/dev/null | head -1)"
+fi
+
+# Install catppuccin-mocha flavor
+if [ -n "$YA_CMD" ]; then
+    echo 'Installing catppuccin-mocha flavor ...'
+    "$YA_CMD" pkg add yazi-rs/flavors:catppuccin-mocha
+    "$YA_CMD" pkg install
+else
+    echo -e "${RED}ya command not found. Install yazi, then re-run.${NO_COLOR}"
+fi
+
 echo 'Setting up Yazi dotfiles ...'
 
 for item in "$SCRIPT_DIR"/*; do

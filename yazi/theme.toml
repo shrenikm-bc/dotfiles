@@ -1,2 +1,2 @@
-# Using default theme as a starting point
-# Customize as needed
+[flavor]
+use = "catppuccin-mocha"
