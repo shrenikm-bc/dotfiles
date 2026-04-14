@@ -1,6 +1,4 @@
 {
-  "model": "opus",
-  "editorMode": "vim",
   "permissions": {
     "allow": [
       "Read",
@@ -48,5 +46,8 @@
       "Bash(git push --force *)",
       "Bash(git reset --hard *)"
     ]
-  }
+  },
+  "model": "sonnet",
+  "effortLevel": "medium",
+  "editorMode": "vim"
 }
