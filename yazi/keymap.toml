@@ -11,4 +11,8 @@ prepend_keymap = [
 
   # Toggle hidden files
   { on = ["z", "h"], run = "hidden toggle", desc = "Toggle hidden files" },
+
+  # Search
+  { on = [",", "f", "f"], run = "search fd", desc = "Search files by name" },
+  { on = [",", "s", "g"], run = "search rg", desc = "Search file contents" },
 ]
