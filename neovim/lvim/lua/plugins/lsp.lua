@@ -20,6 +20,13 @@ return {
         },
         harper_ls = {
           filetypes = { "vim", "lua", "cmake", "c", "cpp", "python", "sh", "yaml", "xml", "markdown", "text", "toml" },
+          settings = {
+            ["harper-ls"] = {
+              linters = {
+                LongSentences = false,
+              },
+            },
+          },
         },
         -- copilot.lua only works with its own copilot lsp server
         copilot = { enabled = false },
