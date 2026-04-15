@@ -1,30 +1,23 @@
--- Keymaps
-local KEYMAP_OPTS = { noremap = true, unique = false, silent = true }
-
 -- Toggle keymaps for Diffview
-vim.keymap.set("n", "<leader>do", function()
+vim.keymap.set("n", "<leader>gd", function()
   if next(require("diffview.lib").views) == nil then
     vim.cmd("DiffviewOpen")
   else
     vim.cmd("DiffviewClose")
   end
-end, KEYMAP_OPTS)
+end, { noremap = true, silent = true, desc = "Toggle Diffview" })
 
-vim.keymap.set("n", "<leader>dr", function()
-  if next(require("diffview.lib").views) == nil then
-    vim.cmd("DiffviewRefresh")
-  else
-    vim.cmd("DiffviewClose")
-  end
-end, KEYMAP_OPTS)
+vim.keymap.set("n", "<leader>gR", function()
+  vim.cmd("DiffviewRefresh")
+end, { noremap = true, silent = true, desc = "Diffview Refresh" })
 
-vim.keymap.set("n", "<leader>df", function()
+vim.keymap.set("n", "<leader>gD", function()
   if next(require("diffview.lib").views) == nil then
     vim.cmd("DiffviewFileHistory")
   else
     vim.cmd("DiffviewClose")
   end
-end, KEYMAP_OPTS)
+end, { noremap = true, silent = true, desc = "Toggle File History" })
 
 return {
   "sindrets/diffview.nvim",
