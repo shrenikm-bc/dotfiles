@@ -16,6 +16,7 @@ YELLOW='\033[1;33m'
 NO_COLOR='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TARGET_DIR=~/.config/yazi
 
 link_if_missing() {
@@ -42,12 +43,13 @@ link_if_missing() {
 if command -v yazi &> /dev/null; then
     echo "yazi is already installed ($(command -v yazi))."
 else
-    YAZI_VERSION_FILE="$SCRIPT_DIR/version"
-    if [ ! -f "$YAZI_VERSION_FILE" ]; then
-        echo -e "${RED}Missing version file at $YAZI_VERSION_FILE${NO_COLOR}"
+    VERSIONS_FILE="$REPO_ROOT/versions"
+    if [ ! -f "$VERSIONS_FILE" ]; then
+        echo -e "${RED}Missing versions file at $VERSIONS_FILE${NO_COLOR}"
         exit 1
     fi
-    YAZI_VERSION="$(cat "$YAZI_VERSION_FILE" | tr -d '[:space:]')"
+    # shellcheck source=../versions
+    . "$VERSIONS_FILE"
     YAZI_INSTALL_DIR="$HOME/.local/bin"
     YAZI_RELEASE="yazi-x86_64-unknown-linux-gnu"
     YAZI_ZIP_URL="https://github.com/sxyazi/yazi/releases/download/v${YAZI_VERSION}/${YAZI_RELEASE}.zip"
@@ -109,10 +111,8 @@ mkdir -p "$TARGET_DIR"
 for item in "$SCRIPT_DIR"/*; do
     name="$(basename "$item")"
 
-    # Skip files that belong to the repo, not to yazi's runtime config.
-    case "$name" in
-        setup_yazi.sh|version) continue ;;
-    esac
+    # Skip this setup script itself.
+    [ "$name" = "setup_yazi.sh" ] && continue
 
     link_if_missing "$item" "$TARGET_DIR/$name" "$name"
 done

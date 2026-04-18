@@ -16,15 +16,17 @@ YELLOW='\033[1;33m'
 NO_COLOR='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Pinned lazygit version is read from a single source-of-truth file.
-# Bumping the version in that file and re-running this script performs an upgrade.
-LAZYGIT_VERSION_FILE="$SCRIPT_DIR/version"
-if [ ! -f "$LAZYGIT_VERSION_FILE" ]; then
-    echo -e "${RED}Missing version file at $LAZYGIT_VERSION_FILE${NO_COLOR}"
+# Pinned versions live in the root-level `versions` file. Bump LAZYGIT_VERSION
+# there and re-run this script to upgrade.
+VERSIONS_FILE="$REPO_ROOT/versions"
+if [ ! -f "$VERSIONS_FILE" ]; then
+    echo -e "${RED}Missing versions file at $VERSIONS_FILE${NO_COLOR}"
     exit 1
 fi
-LAZYGIT_VERSION="$(cat "$LAZYGIT_VERSION_FILE" | tr -d '[:space:]')"
+# shellcheck source=../versions
+. "$VERSIONS_FILE"
 LAZYGIT_INSTALL_DIR="$HOME/.local/bin"
 LAZYGIT_BIN="$LAZYGIT_INSTALL_DIR/lazygit"
 LAZYGIT_TARBALL_URL="https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
