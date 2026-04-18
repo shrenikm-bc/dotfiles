@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
 # Shim so `lvim` resolves as a real executable on PATH, not just a zsh alias.
-# Lets yazi, git, cron, and any other non-zsh context launch LazyVim via $EDITOR.
-NVIM_APPNAME=lvim exec /opt/nvim_0.11.6-linux64/bin/nvim "$@"
+# Reads the pinned nvim version from neovim/version in the dotfiles repo
+# so a single file upgrade reroutes every launch to the new binary.
+SCRIPT_PATH="$(readlink -f "$0")"
+REPO_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+NVIM_VERSION="$(cat "$REPO_ROOT/neovim/version")"
+NVIM_APPNAME=lvim exec "/opt/nvim_${NVIM_VERSION}-linux64/bin/nvim" "$@"

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 # Shim so `nvim` resolves as a real executable on PATH, not just a zsh alias.
-# Ensures the pinned nvim binary is used regardless of shell context.
-NVIM_APPNAME=nvim exec /opt/nvim_0.11.6-linux64/bin/nvim "$@"
+# Reads the pinned nvim version from neovim/version in the dotfiles repo.
+SCRIPT_PATH="$(readlink -f "$0")"
+REPO_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+NVIM_VERSION="$(cat "$REPO_ROOT/neovim/version")"
+NVIM_APPNAME=nvim exec "/opt/nvim_${NVIM_VERSION}-linux64/bin/nvim" "$@"

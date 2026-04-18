@@ -21,8 +21,15 @@ NO_COLOR='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Pinned Neovim version
-NVIM_VERSION="0.11.6"
+# Pinned Neovim version is read from a single source-of-truth file so that
+# the shims (bin/lvim, bin/nvim) and this script always agree. Bumping the
+# version in that file and re-running this script performs an upgrade.
+NVIM_VERSION_FILE="$SCRIPT_DIR/version"
+if [ ! -f "$NVIM_VERSION_FILE" ]; then
+    echo -e "${RED}Missing version file at $NVIM_VERSION_FILE${NO_COLOR}"
+    exit 1
+fi
+NVIM_VERSION="$(cat "$NVIM_VERSION_FILE" | tr -d '[:space:]')"
 NVIM_INSTALL_DIR="/opt/nvim_${NVIM_VERSION}-linux64"
 NVIM_BIN="${NVIM_INSTALL_DIR}/bin/nvim"
 NVIM_TARBALL_URL="https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/nvim-linux-x86_64.tar.gz"

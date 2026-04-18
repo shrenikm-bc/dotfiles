@@ -58,17 +58,9 @@ alias gpo='git push origin'
 
 # Neovim config
 # -----------------------------------------------------------
-NVIM_BIN=/opt/nvim_0.11.6-linux64/bin/nvim
-
-# Aliases for different neovim setups.
-
-# Custom Neovim setup
-alias nvim='NVIM_APPNAME=nvim $NVIM_BIN'
-
-# LazyVim setup
-alias lvim='NVIM_APPNAME=lvim $NVIM_BIN'
-
-# Set editor
+# The `nvim` and `lvim` commands are provided by shims in ~/.local/bin
+# (symlinked from dotfiles/bin/). The shims read the pinned version from
+# dotfiles/neovim/version and set NVIM_APPNAME appropriately.
 export EDITOR="lvim"
 # -----------------------------------------------------------
 
