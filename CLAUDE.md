@@ -31,6 +31,18 @@ All setup scripts share a common skeleton — match it when adding a new tool:
   re-runs are no-ops
 - End with `"<Name> dotfiles setup complete."` plus an optional CYAN hint
 
+## Install methods: apt vs pinned binary
+
+Default to `apt install` for setup scripts. Reach for a pinned binary
+download (tracked in the root-level `versions` file) only when:
+- A specific version matters (e.g. neovim, because lvim/plugins assume it).
+- The apt package is missing or too stale on the target distro.
+- The upstream ships only as snap (e.g. yazi) — snap isn't available on
+  every environment this repo targets (notably WSL).
+
+If none of those apply, apt keeps the setup script trivial and avoids
+pinning a version we don't actually care about.
+
 ## Neovim
 
 Two configs coexist: `neovim/nvim/` (legacy, from-scratch) and
