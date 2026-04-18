@@ -5,6 +5,10 @@
 # Idempotent: safe to re-run on an already-configured system.
 # ------------------------------------------------
 
+set -u
+
+# Defining colors
+# ------------------------------------------------
 RED='\033[0;31m'
 CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
@@ -59,9 +63,9 @@ clone_plugin_if_missing() {
     local url="$2"
     local dest="$ZSH_CUSTOM_PLUGINS/$name"
     if [ -d "$dest" ]; then
-        echo "$name plugin is already installed."
+        echo "$name is already installed."
     else
-        echo "Installing $name plugin ..."
+        echo "$name is not installed. Installing ..."
         git clone "$url" "$dest"
     fi
 }
@@ -74,9 +78,7 @@ clone_plugin_if_missing zsh-syntax-highlighting https://github.com/zsh-users/zsh
 echo 'Setting up zsh config ...'
 link_if_missing "$SCRIPT_DIR/.zshrc" ~/.zshrc ".zshrc"
 
-# Nudge the user to switch login shells if they haven't already.
+echo -e "\nZsh dotfiles setup complete."
 if [ "$(basename "$SHELL")" != "zsh" ]; then
     echo -e "${YELLOW}Current login shell is $SHELL. Run 'chsh -s $(command -v zsh)' to switch to zsh.${NO_COLOR}"
 fi
-
-echo -e '\nZsh dotfiles setup complete.'

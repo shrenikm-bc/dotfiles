@@ -8,8 +8,7 @@ Interpreter: Zsh
 Terminal Emulator: Kitty
 Terminal Multiplexer: Tmux
 Miscellaneous:
-  - Ranger (Not used)
-  - Yazi (No configuration yet)
+  - Yazi
 
 ## Architecture
 

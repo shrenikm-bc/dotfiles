@@ -5,8 +5,13 @@
 # Idempotent: safe to re-run on an already-configured system.
 # ------------------------------------------------
 
+set -u
+
+# Defining colors
+# ------------------------------------------------
 RED='\033[0;31m'
 CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
 NO_COLOR='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -43,7 +48,7 @@ TPM_DIR=~/.tmux/plugins/tpm
 if [ -d "$TPM_DIR" ]; then
     echo 'TPM is already installed.'
 else
-    echo 'Installing TPM ...'
+    echo 'TPM is not installed. Installing ...'
     mkdir -p ~/.tmux/plugins
     git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 fi
@@ -53,5 +58,5 @@ fi
 echo 'Setting up tmux config ...'
 link_if_missing "$SCRIPT_DIR/.tmux.conf" ~/.tmux.conf ".tmux.conf"
 
-echo -e '\nTmux dotfiles setup complete.'
+echo -e "\nTmux dotfiles setup complete."
 echo -e "${CYAN}Launch tmux and press prefix + I to install plugins.${NO_COLOR}"
