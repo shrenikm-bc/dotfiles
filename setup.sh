@@ -57,12 +57,13 @@ git -C "$SCRIPT_DIR" submodule update --init --recursive
 
 # Per-tool prompts
 # ------------------------------------------------
-configure_if_wanted "zsh"    "$SCRIPT_DIR/zsh/setup_zsh.sh"
-configure_if_wanted "neovim" "$SCRIPT_DIR/neovim/setup_neovim.sh"
-configure_if_wanted "tmux"   "$SCRIPT_DIR/tmux/setup_tmux.sh"
-configure_if_wanted "kitty"  "$SCRIPT_DIR/kitty/setup_kitty.sh"
-configure_if_wanted "yazi"   "$SCRIPT_DIR/yazi/setup_yazi.sh"
-configure_if_wanted "claude" "$SCRIPT_DIR/claude/setup_claude.sh"
+configure_if_wanted "zsh"     "$SCRIPT_DIR/zsh/setup_zsh.sh"
+configure_if_wanted "neovim"  "$SCRIPT_DIR/neovim/setup_neovim.sh"
+configure_if_wanted "tmux"    "$SCRIPT_DIR/tmux/setup_tmux.sh"
+configure_if_wanted "kitty"   "$SCRIPT_DIR/kitty/setup_kitty.sh"
+configure_if_wanted "yazi"    "$SCRIPT_DIR/yazi/setup_yazi.sh"
+configure_if_wanted "lazygit" "$SCRIPT_DIR/lazygit/setup_lazygit.sh"
+configure_if_wanted "claude"  "$SCRIPT_DIR/claude/setup_claude.sh"
 
 echo
 echo '------------------------------------------------'
