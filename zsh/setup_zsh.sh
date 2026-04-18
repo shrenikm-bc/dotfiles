@@ -32,6 +32,19 @@ link_if_missing() {
     fi
 }
 
+prompt_yes_no() {
+    local question="$1"
+    local answer
+    while true; do
+        read -r -p "$question (y/n): " answer
+        case "$answer" in
+            [yY]|[yY][eE][sS]) return 0 ;;
+            [nN]|[nN][oO]) return 1 ;;
+            *) echo "Please answer y or n." ;;
+        esac
+    done
+}
+
 # Install zsh
 # ------------------------------------------------
 if command -v zsh &> /dev/null; then
@@ -79,6 +92,15 @@ echo 'Setting up zsh config ...'
 link_if_missing "$SCRIPT_DIR/.zshrc" ~/.zshrc ".zshrc"
 
 echo -e "\nZsh dotfiles setup complete."
-if [ "$(basename "$SHELL")" != "zsh" ]; then
-    echo -e "${YELLOW}Current login shell is $SHELL. Run 'chsh -s $(command -v zsh)' to switch to zsh.${NO_COLOR}"
+
+# Offer to set zsh as the login shell. chsh will prompt for your password.
+ZSH_BIN="$(command -v zsh)"
+if [ "$SHELL" = "$ZSH_BIN" ]; then
+    echo 'zsh is already the default login shell.'
+else
+    echo -e "${YELLOW}Current login shell is $SHELL.${NO_COLOR}"
+    if prompt_yes_no "Set zsh as your default login shell?"; then
+        chsh -s "$ZSH_BIN"
+        echo -e "${CYAN}Default login shell set to $ZSH_BIN. Restart your terminal to take effect.${NO_COLOR}"
+    fi
 fi
