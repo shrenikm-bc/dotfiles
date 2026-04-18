@@ -99,6 +99,19 @@ else
     echo -e "${CYAN}Neovim has been setup. Run :PlugInstall to install the plugins${NO_COLOR}"
 fi
 
+# nvim / lvim shims so $EDITOR resolves in non-zsh contexts (yazi, git, cron).
+mkdir -p ~/.local/bin
+for shim in nvim lvim; do
+    SHIM_SYSTEM=~/.local/bin/$shim
+    SHIM_REPO=$(pwd)/bin/$shim
+    if [ -L "$SHIM_SYSTEM" ]; then
+        echo "$shim shim symlink already exists. Replacement must be done manually."
+    else
+        echo "$shim shim symlink does not exist. Creating one ..."
+        ln -s $SHIM_REPO $SHIM_SYSTEM
+    fi
+done
+
 echo -e '\n'
 
 # Tmux setup

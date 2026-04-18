@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Shim so `nvim` resolves as a real executable on PATH, not just a zsh alias.
+# Ensures the pinned nvim binary is used regardless of shell context.
+NVIM_APPNAME=nvim exec /opt/nvim_0.11.6-linux64/bin/nvim "$@"
