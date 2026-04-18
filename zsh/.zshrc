@@ -91,9 +91,25 @@ unset __conda_setup
 # Prompt: show active conda env
 # -----------------------------------------------------------
 # Conda's own PS1 mutation is disabled via `conda config --set changeps1 false`
-# because it doesn't survive direnv's subshell activation. Render
-# $CONDA_DEFAULT_ENV live via PROMPT_SUBST instead.
-PROMPT='%F{yellow}${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%f'$PROMPT
+# because it doesn't survive direnv's subshell activation. We render
+# $CONDA_DEFAULT_ENV into PROMPT ourselves.
+#
+# The precmd hook + _ORIGINAL_PROMPT snapshot is specifically to appease
+# af-magic: its afmagic_dashes function greps $PS1 for the literal string
+# `(envname)` so it can subtract that width from the top dashes line. With
+# a PROMPT_SUBST one-liner, PS1 stores the unexpanded template, the grep
+# misses, dashes run full-width, and the `(envname)` prefix wraps to a new
+# line. Rebuilding PROMPT with the literal env name pre-substituted avoids
+# the wrap.
+#
+# If you switch themes: drop this entire block and use a plain one-liner
+#     PROMPT='%F{yellow}${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%f'$PROMPT
+# — or, if the new theme has a built-in conda segment, use that.
+_ORIGINAL_PROMPT=$PROMPT
+_conda_prompt_update() {
+    PROMPT="${CONDA_DEFAULT_ENV:+%F{yellow\}($CONDA_DEFAULT_ENV)%f }${_ORIGINAL_PROMPT}"
+}
+precmd_functions+=(_conda_prompt_update)
 # -----------------------------------------------------------
 
 # Node config
