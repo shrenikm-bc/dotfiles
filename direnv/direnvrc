@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Global direnvrc sourced by direnv on every .envrc load.
+# Defines helpers that per-project .envrc files can call via `layout <name>`.
+# ------------------------------------------------
+
+# layout conda <env-name>
+# ------------------------------------------------
+# Activates a pre-existing conda env for the current project.
+# Usage in a project's .envrc:
+#     layout conda my-project-env
+#
+# Assumes the env already exists (created via `conda create -n <name> ...` or
+# `conda env create -f environment.yml`). direnv handles capturing the env
+# var changes — no need to manually export PATH/CONDA_PREFIX.
+layout_conda() {
+    local env_name="$1"
+    if [ -z "$env_name" ]; then
+        log_error "layout conda: missing environment name"
+        return 1
+    fi
+
+    # Locate conda.sh. Checks common install prefixes; extend if your conda
+    # lives elsewhere.
+    local conda_sh=""
+    local candidate
+    for candidate in /opt/miniconda3 /opt/anaconda3 "$HOME/miniconda3" "$HOME/anaconda3"; do
+        if [ -f "$candidate/etc/profile.d/conda.sh" ]; then
+            conda_sh="$candidate/etc/profile.d/conda.sh"
+            break
+        fi
+    done
+
+    if [ -z "$conda_sh" ]; then
+        log_error "layout conda: could not find conda.sh in any known prefix"
+        return 1
+    fi
+
+    # shellcheck disable=SC1090
+    . "$conda_sh"
+    conda activate "$env_name"
+}

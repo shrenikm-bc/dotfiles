@@ -99,6 +99,14 @@ export NVM_DIR="$HOME/.nvm"
 # -----------------------------------------------------------
 
 
+# Direnv
+# -----------------------------------------------------------
+# Must come AFTER conda init so direnvrc layouts can source conda.sh.
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+# -----------------------------------------------------------
+
 # Yazi config
 # -----------------------------------------------------------
 # Resume from the last working directory when calling yazi through 'y'
