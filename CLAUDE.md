@@ -42,7 +42,9 @@ symlinked into `~/.local/bin/`. The shims set `NVIM_APPNAME` and exec the
 pinned neovim binary. They are NOT zsh aliases — being on PATH means
 they resolve from any shell context (yazi, git, cron, `$EDITOR`, sh -c).
 
-The pinned neovim version lives in `neovim/version` — single source of
-truth. The shims read it at every launch via `readlink -f "$0"` to locate
-the repo; `setup_neovim.sh` reads it to decide what to download. Upgrade
-flow: edit `neovim/version`, re-run `setup_neovim.sh`.
+Pinned versions for all download-managed tools (neovim, lazygit, yazi)
+live in the root-level `versions` file as shell assignments
+(`NVIM_VERSION=…`, `LAZYGIT_VERSION=…`, `YAZI_VERSION=…`). Setup scripts
+and shims source this file directly. The shims locate the repo at launch
+via `readlink -f "$0"`. Upgrade flow: bump the value in `versions`,
+re-run the matching `setup_<tool>.sh`.
