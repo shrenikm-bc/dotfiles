@@ -86,9 +86,14 @@ else
     fi
 fi
 unset __conda_setup
+# -----------------------------------------------------------
 
-# Custom default conda environment
-conda activate ai
+# Prompt: show active conda env
+# -----------------------------------------------------------
+# Conda's own PS1 mutation is disabled via `conda config --set changeps1 false`
+# because it doesn't survive direnv's subshell activation. Render
+# $CONDA_DEFAULT_ENV live via PROMPT_SUBST instead.
+PROMPT='%F{yellow}${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%f'$PROMPT
 # -----------------------------------------------------------
 
 # Node config
@@ -102,6 +107,9 @@ export NVM_DIR="$HOME/.nvm"
 # Direnv
 # -----------------------------------------------------------
 # Must come AFTER conda init so direnvrc layouts can source conda.sh.
+# Empty DIRENV_LOG_FORMAT silences the "loading .envrc / exporting ..." chatter
+# (and the trailing blank line) on every cd.
+export DIRENV_LOG_FORMAT=
 if command -v direnv &> /dev/null; then
     eval "$(direnv hook zsh)"
 fi
