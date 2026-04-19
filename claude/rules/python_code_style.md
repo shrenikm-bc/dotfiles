@@ -1,9 +1,10 @@
 # Python Code Style
 
-## Virtual Environment
+## Virtual Environment and Build
 
 - Conda is preferred, along with uv for package/project management
 - Assume that each python project will have its own conda environment with the dependencies in the pyproject file
+- All dependencies in the pyproject file must be pinned with == (prefer picking the latest version of every dependency that is still compatible with the other dependencies)
 
 ## Formatting
 
@@ -44,6 +45,7 @@
 
 ### Comments
 
+- Avoid inline comments
 - Avoid comments that are obvious or trivial
 - Complex logic must always be preceded by a comment/comments
 
