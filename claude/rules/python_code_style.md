@@ -10,6 +10,7 @@
 
 - Ruff is preferred
 - Each project will ideally define the ruff config in the pyproject file
+- If you see ruff in any toml config file (standalone, pyproject, etc), please ruff format after making code changes
 
 ## Style Guide
 
@@ -29,6 +30,7 @@
 
 - Type hints are necessary in almost every circumstance
 - May be skipped for trivial inner functions, etc.
+- Avoid "Any" unless absolutely necessary. Try to infer the types as much as possible (even for external libraries)
 
 ## Imports
 

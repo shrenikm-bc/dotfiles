@@ -47,6 +47,6 @@
       "Bash(git reset --hard *)"
     ]
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "editorMode": "vim"
 }
