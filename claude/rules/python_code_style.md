@@ -19,6 +19,7 @@
 - Use frozen attrs classes wherever possible
 - Avoid properties, but cached_properties for frozen classes are fine
 - Prefer to pass in an attrs dataclass instead of a lot of different arguments to a function
+- Prefer creating attrs dataclasses over complex nested dictionaries, tuples, etc. for structured data
 - Prefer creating Enums (string enums, int enums, etc.) for categorical variables instead of using strings or integers directly
 - Avoid global variables
 - Try to minimize state mutation and function side-effects as much as possible
