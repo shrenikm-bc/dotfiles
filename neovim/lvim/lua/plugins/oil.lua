@@ -22,5 +22,49 @@ return {
       -- There isn't an open_float action, so we use a separate binding outside keymaps.
       vim.keymap.set("n", "-", require("oil").open_float, { noremap = true, unique = false, silent = true }),
     })
+
+    -- Scope file/grep pickers to the directory currently shown in the oil buffer.
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "oil",
+      callback = function(args)
+        local function oil_dir()
+          return require("oil").get_current_dir(args.buf)
+        end
+        local function pick(cmd, desc)
+          return function()
+            local dir = oil_dir()
+            if not dir then
+              return
+            end
+            LazyVim.pick(cmd, { cwd = dir })()
+          end
+        end
+        local opts = { buffer = args.buf, silent = true }
+        vim.keymap.set(
+          "n",
+          "<leader>ff",
+          pick("files", "Find Files"),
+          vim.tbl_extend("force", opts, { desc = "Find Files (oil dir)" })
+        )
+        vim.keymap.set(
+          "n",
+          "<leader>fF",
+          pick("files", "Find Files"),
+          vim.tbl_extend("force", opts, { desc = "Find Files (oil dir)" })
+        )
+        vim.keymap.set(
+          "n",
+          "<leader>sg",
+          pick("live_grep", "Grep"),
+          vim.tbl_extend("force", opts, { desc = "Grep (oil dir)" })
+        )
+        vim.keymap.set(
+          "n",
+          "<leader>sG",
+          pick("live_grep", "Grep"),
+          vim.tbl_extend("force", opts, { desc = "Grep (oil dir)" })
+        )
+      end,
+    })
   end,
 }

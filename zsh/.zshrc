@@ -60,23 +60,9 @@ alias gpo='git push origin'
 
 # Neovim config
 # -----------------------------------------------------------
-NVIM_BIN=/opt/nvim_0.12.0-linux-x86_64/bin/nvim
-
-# Aliases for different neovim setups.
-
-# Alias for tictl kitty
-alias tictl='TERM=xterm-256color tictl'
-
-# Custom Neovim setup
-alias nvim='NVIM_APPNAME=nvim $NVIM_BIN'
-
-# LazyVim setup
-alias lvim='NVIM_APPNAME=lvim $NVIM_BIN'
-
-# Brain LazyVim setup
-alias blvim='NVIM_APPNAME=blvim $NVIM_BIN'
-
-# Set editor
+# The `nvim` and `lvim` commands are provided by shims in ~/.local/bin
+# (symlinked from dotfiles/bin/). The shims read the pinned version from
+# dotfiles/neovim/version and set NVIM_APPNAME appropriately.
 export EDITOR="lvim"
 # -----------------------------------------------------------
 
@@ -94,21 +80,55 @@ export LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRAR
 
 # Conda
 # -----------------------------------------------------------
+# conda's shell hook ends with an unconditional `conda activate 'base'`
+# whenever `auto_activate: True` is set in condarc (the default). That stacks
+# base on top of whatever env was already active in the parent shell, so
+# subshells spawned from a non-base env (e.g. nvim's builtin terminal) end up
+# with the prompt and PATH reset to base. Snapshot the inherited env first,
+# then pop base back off after the hook runs.
+_inherited_conda_env="${CONDA_DEFAULT_ENV:-}"
+
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/opt/miniconda3/bin:$PATH"
+        export PATH="$HOME/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 
-# Custom default conda environment
-conda activate ai
+if [ -n "$_inherited_conda_env" ] && [ "$_inherited_conda_env" != "base" ]; then
+    conda deactivate
+fi
+unset _inherited_conda_env
+# -----------------------------------------------------------
+
+# Prompt: show active conda env
+# -----------------------------------------------------------
+# Conda's own PS1 mutation is disabled via `conda config --set changeps1 false`
+# because it doesn't survive direnv's subshell activation. We render
+# $CONDA_DEFAULT_ENV into PROMPT ourselves.
+#
+# The precmd hook + _ORIGINAL_PROMPT snapshot is specifically to appease
+# af-magic: its afmagic_dashes function greps $PS1 for the literal string
+# `(envname)` so it can subtract that width from the top dashes line. With
+# a PROMPT_SUBST one-liner, PS1 stores the unexpanded template, the grep
+# misses, dashes run full-width, and the `(envname)` prefix wraps to a new
+# line. Rebuilding PROMPT with the literal env name pre-substituted avoids
+# the wrap.
+#
+# If you switch themes: drop this entire block and use a plain one-liner
+#     PROMPT='%F{yellow}${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%f'$PROMPT
+# — or, if the new theme has a built-in conda segment, use that.
+_ORIGINAL_PROMPT=$PROMPT
+_conda_prompt_update() {
+    PROMPT="${CONDA_DEFAULT_ENV:+%F{yellow\}($CONDA_DEFAULT_ENV)%f }${_ORIGINAL_PROMPT}"
+}
+precmd_functions+=(_conda_prompt_update)
 # -----------------------------------------------------------
 
 # Node config
@@ -118,6 +138,17 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # -----------------------------------------------------------
 
+
+# Direnv
+# -----------------------------------------------------------
+# Must come AFTER conda init so direnvrc layouts can source conda.sh.
+# Empty DIRENV_LOG_FORMAT silences the "loading .envrc / exporting ..." chatter
+# (and the trailing blank line) on every cd.
+export DIRENV_LOG_FORMAT=
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+# -----------------------------------------------------------
 
 # Yazi config
 # -----------------------------------------------------------
