@@ -54,13 +54,13 @@ return {
         )
         vim.keymap.set(
           "n",
-          "<leader>gs",
+          "<leader>sg",
           pick("live_grep", "Grep"),
           vim.tbl_extend("force", opts, { desc = "Grep (oil dir)" })
         )
         vim.keymap.set(
           "n",
-          "<leader>gS",
+          "<leader>sG",
           pick("live_grep", "Grep"),
           vim.tbl_extend("force", opts, { desc = "Grep (oil dir)" })
         )

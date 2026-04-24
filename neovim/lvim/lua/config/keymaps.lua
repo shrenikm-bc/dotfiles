@@ -11,6 +11,12 @@ map("n", "<leader>qf", "<cmd>q<cr>", { desc = "Quit Window" })
 -- Quit window without saving
 map("n", "<leader>qx", "<cmd>q!<cr>", { desc = "Quit Window" })
 
+-- Global Organize Imports. Set globally (not buffer-local per-LSP) so diffview's
+-- buffer-local `<leader>co` (conflict_choose("ours")) wins inside diffview tabs.
+map("n", "<leader>co", function()
+  LazyVim.lsp.action["source.organizeImports"]()
+end, { desc = "Organize Imports" })
+
 local float_win = { style = "float", border = "rounded", width = 0.8, height = 0.8 }
 
 -- After toggling a terminal on, send <CR> to nudge the cursor back to the prompt.
