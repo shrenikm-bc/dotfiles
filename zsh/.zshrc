@@ -74,6 +74,14 @@ path+=$HOME/.cargo/bin
 
 # Conda
 # -----------------------------------------------------------
+# conda's shell hook ends with an unconditional `conda activate 'base'`
+# whenever `auto_activate: True` is set in condarc (the default). That stacks
+# base on top of whatever env was already active in the parent shell, so
+# subshells spawned from a non-base env (e.g. nvim's builtin terminal) end up
+# with the prompt and PATH reset to base. Snapshot the inherited env first,
+# then pop base back off after the hook runs.
+_inherited_conda_env="${CONDA_DEFAULT_ENV:-}"
+
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
@@ -86,6 +94,11 @@ else
     fi
 fi
 unset __conda_setup
+
+if [ -n "$_inherited_conda_env" ] && [ "$_inherited_conda_env" != "base" ]; then
+    conda deactivate
+fi
+unset _inherited_conda_env
 # -----------------------------------------------------------
 
 # Prompt: show active conda env
