@@ -67,39 +67,72 @@ local float_opts = {
   win = { style = "float", border = "rounded", width = 0.8, height = 0.8 },
 }
 
--- 1. Override the default LazyVim Ctrl+/ terminal to open a shell inside the sandbox container
-local container_shell_cmd = "ssh sandbox"
-map({ "n", "t" }, "<c-/>", function()
-  Snacks.terminal.toggle(container_shell_cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_shell" }))
-end, { desc = "Toggle Terminal (Sandbox)" })
+-- After toggling a terminal on, send <CR> to nudge the cursor back to the prompt.
+local function focus_terminal(term)
+  if term and term:valid() then
+    vim.schedule(function()
+      if term:valid() then
+        vim.api.nvim_chan_send(vim.bo[term.buf].channel, "\n")
+        vim.cmd("startinsert")
+      end
+    end)
+  end
+end
 
-map({ "n", "t" }, "<c-_>", function()
-  Snacks.terminal.toggle(container_shell_cmd, vim.tbl_extend("force", float_opts, { id = "sandbox_shell" }))
-end, { desc = "which_key_ignore" })
+-- Python runner terminal reference
+local _python_term = nil
+
+-- Delete LazyVim default terminal keymaps so we can rebind them
+pcall(vim.keymap.del, { "n", "t" }, "<c-/>")
+pcall(vim.keymap.del, { "n", "t" }, "<c-_>")
+
+-- 1. Override the default LazyVim Ctrl+/ terminal to open a shell inside the sandbox container (Horizontal Split)
+local container_shell_cmd = "ssh sandbox"
+local function toggle_split_terminal()
+  local term = Snacks.terminal(container_shell_cmd, { win = { position = "bottom" }, cwd = LazyVim.root() })
+  focus_terminal(term)
+end
+
+map({ "n", "t" }, "<C-/>", toggle_split_terminal, { desc = "Toggle Terminal (Sandbox)" })
+map({ "n", "t" }, "<C-_>", toggle_split_terminal, { desc = "which_key_ignore" })
 
 -- 2. <leader>rp opens a floating run terminal.
 map("n", "<leader>rp", function()
+  if _python_term and _python_term:buf_valid() then
+    _python_term:close()
+  end
   local cmd, err = get_sandbox_cmd(false)
   if err then
     vim.notify(err, vim.log.levels.ERROR)
     return
   end
   cmd = cmd .. '; echo "\\n[Process Exited]"; read'
-  Snacks.terminal.toggle(
+  _python_term = Snacks.terminal.open(
     cmd,
-    vim.tbl_extend("force", float_opts, { id = "sandbox_python_runner", interactive = false })
+    vim.tbl_extend("force", float_opts, { interactive = false })
   )
 end, { desc = "Run Python Script inside nspawn sandbox" })
 
--- DEBUG
+-- 3. DEBUG
 map("n", "<leader>rd", function()
+  if _python_term and _python_term:buf_valid() then
+    _python_term:close()
+  end
   local cmd, err = get_sandbox_cmd(true)
   if err then
     vim.notify(err, vim.log.levels.ERROR)
     return
   end
-  Snacks.terminal.toggle(
+  _python_term = Snacks.terminal.open(
     cmd,
-    vim.tbl_extend("force", float_opts, { id = "sandbox_python_debugger", interactive = false })
+    vim.tbl_extend("force", float_opts, { interactive = false })
   )
 end, { desc = "Debug Python Script inside nspawn sandbox" })
+
+-- 4. Toggle python runner float visibility (preserves process and scrollback)
+map({ "n", "t" }, "<leader>rt", function()
+  if _python_term and _python_term:buf_valid() then
+    _python_term:toggle()
+    focus_terminal(_python_term)
+  end
+end, { desc = "Toggle Python Terminal" })
