@@ -68,11 +68,13 @@ local float_opts = {
 }
 
 -- After toggling a terminal on, send <CR> to nudge the cursor back to the prompt.
-local function focus_terminal(term)
+local function focus_terminal(term, send_cr)
   if term and term:valid() then
     vim.schedule(function()
       if term:valid() then
-        vim.api.nvim_chan_send(vim.bo[term.buf].channel, "\n")
+        if send_cr then
+          vim.api.nvim_chan_send(vim.bo[term.buf].channel, "\n")
+        end
         vim.cmd("startinsert")
       end
     end)
@@ -89,8 +91,8 @@ pcall(vim.keymap.del, { "n", "t" }, "<c-_>")
 -- 1. Override the default LazyVim Ctrl+/ terminal to open a shell inside the sandbox container (Horizontal Split)
 local container_shell_cmd = "ssh sandbox"
 local function toggle_split_terminal()
-  local term = Snacks.terminal(container_shell_cmd, { win = { position = "bottom" }, cwd = LazyVim.root() })
-  focus_terminal(term)
+  local term = Snacks.terminal(container_shell_cmd, { win = { style = "terminal", position = "bottom" }, id = "sandbox_split", cwd = LazyVim.root() })
+  focus_terminal(term, false)
 end
 
 map({ "n", "t" }, "<C-/>", toggle_split_terminal, { desc = "Toggle Terminal (Sandbox)" })
@@ -133,6 +135,6 @@ end, { desc = "Debug Python Script inside nspawn sandbox" })
 map({ "n", "t" }, "<leader>rt", function()
   if _python_term and _python_term:buf_valid() then
     _python_term:toggle()
-    focus_terminal(_python_term)
+    focus_terminal(_python_term, true)
   end
 end, { desc = "Toggle Python Terminal" })
