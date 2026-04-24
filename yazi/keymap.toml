@@ -15,4 +15,8 @@ prepend_keymap = [
   # Search
   { on = [",", "f", "f"], run = "search fd", desc = "Search files by name" },
   { on = [",", "s", "g"], run = "search rg", desc = "Search file contents" },
+
+  # Copy the hovered file's contents into the system clipboard.
+  # Binary files will produce garbage in the clipboard -- intended for text files.
+  { on = ["<C-y>"], run = 'shell "xclip -selection clipboard -in < \"$1\""', desc = "Copy file contents to clipboard" },
 ]

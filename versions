@@ -1,0 +1,7 @@
+# Pinned versions for tools that this repo downloads and installs directly.
+# Sourced by the per-tool setup scripts and the bin/ shims.
+# Bump a value and re-run the corresponding setup script to upgrade.
+
+NVIM_VERSION=0.12.0
+LAZYGIT_VERSION=0.44.1
+YAZI_VERSION=25.5.31

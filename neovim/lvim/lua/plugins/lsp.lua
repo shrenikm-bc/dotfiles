@@ -10,13 +10,9 @@ return {
               logLevel = "error",
             },
           },
-          keys = {
-            {
-              "<leader>co",
-              LazyVim.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
-            },
-          },
+          -- `<leader>co` is bound globally in keymaps.lua so diffview's
+          -- buffer-local `<leader>co` (conflict_choose("ours")) wins inside
+          -- a diffview tab without a per-LSP buffer-local binding racing it.
         },
         harper_ls = {
           filetypes = { "vim", "lua", "cmake", "c", "cpp", "python", "sh", "yaml", "xml", "markdown", "text", "toml" },

@@ -1,14 +1,16 @@
 # Python Code Style
 
-## Virtual Environment
+## Virtual Environment and Build
 
 - Conda is preferred, along with uv for package/project management
 - Assume that each python project will have its own conda environment with the dependencies in the pyproject file
+- All dependencies in the pyproject file must be pinned with == (prefer picking the latest version of every dependency that is still compatible with the other dependencies)
 
 ## Formatting
 
 - Ruff is preferred
 - Each project will ideally define the ruff config in the pyproject file
+- If you see ruff in any toml config file (standalone, pyproject, etc), please ruff format after making code changes
 
 ## Style Guide
 
@@ -17,6 +19,7 @@
 - Use frozen attrs classes wherever possible
 - Avoid properties, but cached_properties for frozen classes are fine
 - Prefer to pass in an attrs dataclass instead of a lot of different arguments to a function
+- Prefer creating attrs dataclasses over complex nested dictionaries, tuples, etc. for structured data
 - Prefer creating Enums (string enums, int enums, etc.) for categorical variables instead of using strings or integers directly
 - Avoid global variables
 - Try to minimize state mutation and function side-effects as much as possible
@@ -28,6 +31,7 @@
 
 - Type hints are necessary in almost every circumstance
 - May be skipped for trivial inner functions, etc.
+- Avoid "Any" unless absolutely necessary. Try to infer the types as much as possible (even for external libraries)
 
 ## Imports
 
@@ -44,6 +48,7 @@
 
 ### Comments
 
+- Avoid inline comments
 - Avoid comments that are obvious or trivial
 - Complex logic must always be preceded by a comment/comments
 

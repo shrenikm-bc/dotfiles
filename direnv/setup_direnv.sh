@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Setup script for Claude Code dotfiles.
-# Symlinks directories and individual files into ~/.claude.
+# Setup script for direnv.
+# Installs direnv via apt and symlinks direnvrc into ~/.config/direnv/.
+# The zsh hook (`eval "$(direnv hook zsh)"`) lives in zsh/.zshrc.
 # Idempotent: safe to re-run on an already-configured system.
 # ------------------------------------------------
 
@@ -15,7 +16,6 @@ YELLOW='\033[1;33m'
 NO_COLOR='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TARGET_DIR=~/.claude
 
 link_if_missing() {
     local source="$1"
@@ -33,18 +33,21 @@ link_if_missing() {
     fi
 }
 
-# Symlink the claude config into ~/.claude
+# Install direnv
 # ------------------------------------------------
-echo 'Setting up claude config ...'
-mkdir -p "$TARGET_DIR"
+if command -v direnv &> /dev/null; then
+    echo "direnv is already installed ($(direnv --version))."
+else
+    echo "direnv is not installed. Installing ..."
+    sudo apt update
+    sudo apt install -y direnv
+fi
 
-for item in "$SCRIPT_DIR"/*; do
-    name="$(basename "$item")"
+# Symlink direnvrc
+# ------------------------------------------------
+DIRENV_CONFIG_DIR="$HOME/.config/direnv"
+mkdir -p "$DIRENV_CONFIG_DIR"
+link_if_missing "$SCRIPT_DIR/direnvrc" "$DIRENV_CONFIG_DIR/direnvrc" "direnvrc"
 
-    # Skip this setup script itself
-    [ "$name" = "setup_claude.sh" ] && continue
-
-    link_if_missing "$item" "$TARGET_DIR/$name" "$name"
-done
-
-echo -e "\nClaude Code dotfiles setup complete."
+echo -e "\nDirenv dotfiles setup complete."
+echo -e "${CYAN}Add 'layout conda <env-name>' to a project's .envrc, then run 'direnv allow' inside it.${NO_COLOR}"
