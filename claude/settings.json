@@ -48,5 +48,7 @@
     ]
   },
   "effortLevel": "xhigh",
-  "editorMode": "vim"
+  "theme": "dark-ansi",
+  "editorMode": "vim",
+  "skipAutoPermissionPrompt": true
 }

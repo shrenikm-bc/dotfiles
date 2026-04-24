@@ -28,7 +28,7 @@ end
 -- Python runner terminal reference
 local _python_term = nil
 
--- Run current python file (always kills previous run and starts fresh)
+-- Run current python file in a floating terminal (kills previous run, starts fresh)
 map("n", "<leader>rp", function()
   if _python_term and _python_term:buf_valid() then
     _python_term:close()
@@ -38,7 +38,7 @@ map("n", "<leader>rp", function()
   })
 end, { desc = "Run Python Script" })
 
--- Toggle python runner terminal
+-- Toggle python runner float visibility (preserves process and scrollback)
 map({ "n", "t" }, "<leader>rt", function()
   if _python_term and _python_term:buf_valid() then
     _python_term:toggle()
@@ -46,15 +46,15 @@ map({ "n", "t" }, "<leader>rt", function()
   end
 end, { desc = "Toggle Python Terminal" })
 
--- Delete LazyVim default terminal keymaps (they open a bottom split)
+-- Delete LazyVim default terminal keymaps so we can rebind them
 vim.keymap.del({ "n", "t" }, "<c-/>")
 vim.keymap.del({ "n", "t" }, "<c-_>")
 
--- Toggle general floating terminal (completely independent from python runner)
-local function toggle_float_terminal()
-  local term = Snacks.terminal(nil, { cwd = LazyVim.root(), win = float_win })
+-- Toggle persistent bottom-split terminal (independent from the python runner float)
+local function toggle_split_terminal()
+  local term = Snacks.terminal(nil, { cwd = LazyVim.root() })
   focus_terminal(term)
 end
 
-map({ "n", "t" }, "<C-/>", toggle_float_terminal, { desc = "Toggle Floating Terminal" })
-map({ "n", "t" }, "<C-_>", toggle_float_terminal, { desc = "Toggle Floating Terminal" })
+map({ "n", "t" }, "<C-/>", toggle_split_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-_>", toggle_split_terminal, { desc = "Toggle Terminal" })
