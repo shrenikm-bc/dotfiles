@@ -61,7 +61,8 @@ echo 'Checking system dependencies ...'
 # ripgrep and fd-find back the LazyVim file / grep pickers.
 # unzip is needed by mason for some binaries.
 # xclip gives nvim a clipboard provider on X11.
-APT_PACKAGES=(git curl make gcc unzip ripgrep fd-find xclip)
+# python3-venv backs the dedicated pylsp venv used for refactoring (rope).
+APT_PACKAGES=(git curl make gcc unzip ripgrep fd-find xclip python3-venv)
 MISSING_PACKAGES=()
 
 for pkg in "${APT_PACKAGES[@]}"; do
@@ -116,6 +117,36 @@ link_if_missing "$SCRIPT_DIR/lvim" ~/.config/lvim "lvim config"
 echo 'Setting up lvim shim ...'
 mkdir -p ~/.local/bin
 link_if_missing "$REPO_ROOT/bin/lvim" ~/.local/bin/lvim "lvim shim"
+
+# Install pylsp into a dedicated venv (refactoring-only LSP)
+# ------------------------------------------------
+# pyright stays the primary Python LSP for diagnostics / hover / go-to-def /
+# completion / rename. pylsp is layered on top *only* for rope-backed
+# refactoring code actions (move symbol, extract method, inline, etc.) that
+# pyright doesn't expose. Every other pylsp provider is disabled in
+# lvim/lua/plugins/lsp.lua so it never competes with pyright or ruff.
+#
+# We use a dedicated venv (rather than mason or any project conda env) so:
+#   - pylsp-rope can be co-installed alongside pylsp in the same interpreter
+#     (mason has no clean way to inject extras into its managed venvs).
+#   - the LSP works in any project regardless of whether its conda env has
+#     pylsp installed.
+# Upgrade flow: `rm -rf ~/.local/share/pylsp-venv` and re-run this script.
+PYLSP_VENV="$HOME/.local/share/pylsp-venv"
+if [ -x "$PYLSP_VENV/bin/pylsp" ]; then
+    echo "pylsp venv already set up at $PYLSP_VENV."
+else
+    echo "Setting up pylsp venv at $PYLSP_VENV ..."
+    if ! python3 -m venv "$PYLSP_VENV"; then
+        echo -e "${RED}Failed to create venv at $PYLSP_VENV.${NO_COLOR}"
+        exit 1
+    fi
+    if ! "$PYLSP_VENV/bin/pip" install --upgrade pip python-lsp-server pylsp-rope; then
+        echo -e "${RED}Failed to install python-lsp-server / pylsp-rope into $PYLSP_VENV.${NO_COLOR}"
+        exit 1
+    fi
+    echo -e "${CYAN}pylsp + pylsp-rope installed at $PYLSP_VENV.${NO_COLOR}"
+fi
 
 # Symlink fd-find -> fd (Ubuntu ships the binary as `fdfind`)
 # ------------------------------------------------
