@@ -50,7 +50,7 @@ nvim - Previous from scratch neovim configuration (This has been deprecated)
 lvim - LazyVim configuration which is currently being used. This is used for most regular python projects.
 blvim - LazyVim configuration which is also being used. This one is used for the "shining_software" project which has some configurations for working with nspawn containers.
 
-`nvim` and `lvim` are launched via real executable shims in `bin/`,
+`nvim`, `lvim` and `blvim` are launched via real executable shims in `bin/`,
 symlinked into `~/.local/bin/`. The shims set `NVIM_APPNAME` and exec the
 pinned neovim binary. They are NOT zsh aliases — being on PATH means
 they resolve from any shell context (yazi, git, cron, `$EDITOR`, sh -c).
